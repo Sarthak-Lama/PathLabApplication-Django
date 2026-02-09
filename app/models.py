@@ -1,27 +1,58 @@
 from django.db import models
 
 # Create your models here.
-# class Patient(models.Model):
 
-#  GENDER_CHOICE =[
-#     ('M','Male'),
-#     ('F','Female')
-#     ('O','Other')
-# ]
+
+
+STATUS_CHOICES = (
+   ('P','Pending'),
+   ('C','Complete'),
+   ('D','Delivered')
+  )
+
+
+GENDER_CHOICES = (
+    ('M', 'Male'),
+    ('F', 'Female'),
+    ('O', 'Other'),
+)
+
+class Patient(models.Model):
+    patient_name = models.CharField(max_length=100)
+    age = models.PositiveIntegerField()
+    gender = models.CharField(
+        max_length=1,
+        choices=GENDER_CHOICES
+    )
+    test_name = models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.test_name
  
-# BLOOD_GROUP =[
-#       ('A+','A Positive'),
-#       ('A-','A Negative'),
-#       ('B+','B Positive'),
-#       ('B-','B Negative'),
-#       ('AB+','AB Positive'),
-#       ('AB-','AB Negative'),
-#       ('O+','O Positive'),
-#       ('O-','O Negative'),
-#     ]
-# first_name = models.CharField(max_length=50 , help_text="Patient's First Name")
-# last_name = models.CharField(max_length=50 , help_text="Patient's Last Name")
-# email = models.EmailField(unique=True, help_text="Patient's Email")
+
+class Test(models.Model):
+  test_name = models.CharField(max_length=150 , unique=True)
+  description =models.TextField()
+  price = models.DecimalField(max_digits=15 , decimal_places=2)
+  is_active = models.BooleanField(default=True)
+  created_at = models.DateTimeField(auto_now_add=True)
+
+  def __str__(self):
+   return self.test_name
+  
+
+class LabReport(models.Model):
+  
+  
+  patient = models.ForeignKey(Patient, on_delete=models.CASCADE)
+  test = models.ForeignKey(Test , on_delete=models.CASCADE)
+  status = models.CharField(max_length=1 , choices=STATUS_CHOICES , default='P')
+  result_value = models.TextField()
+  created_at = models.DateTimeField(auto_now_add=True)
+  result_date = models.DateTimeField(auto_now_add=True)
+
+  def __str__(self):
+    return f"{self.patient.patient_name} - {self.test.test_name}"
 
 
 
