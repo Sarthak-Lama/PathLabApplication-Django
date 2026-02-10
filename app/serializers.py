@@ -21,3 +21,8 @@ class LabReportSerializer(serializers.ModelSerializer):
         model = LabReport
         fields = ["id", "patient", "patient_name", "test", "test_name", "status", "result_value", "created_at", "result_date"]
         read_only_fields = ["id", "created_at", "result_date"]
+
+
+class LoginSerializer(serializers.Serializer):
+    username = serializers.CharField()
+    password = serializers.CharField()
